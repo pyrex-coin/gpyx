@@ -3,12 +3,13 @@ pragma solidity ^0.4.24;
 // ----------------------------------------------------------------------------
 // 'GPYX' token contract
 //
-// Deployed to : 0x6610F23DfC2a3DD959460c8EC04260629F55D28D
 // Symbol      : GPYX
 // Name        : PyrexCoin Platform service token
 // Total supply: 10000000
 // Decimals    : 18
-
+//
+// Enjoy.
+//
 // (c) by ILIK. 
 // ----------------------------------------------------------------------------
 
@@ -16,7 +17,7 @@ interface tokenRecipient {function receiveApproval (address _from, uint256 _valu
 contract owned {
     address public owner;
     
-    constructor(){
+    constructor()public {
         owner = msg.sender;
     }
     
@@ -25,7 +26,7 @@ contract owned {
         _;
         
     }
-    function transferOwnership (address newOwner) onlyOwner {
+    function transferOwnership (address newOwner)public onlyOwner {
         owner = newOwner;
     }
     
@@ -82,6 +83,7 @@ contract GPYX is owned{
             require(_value <=allowance[_from][msg.sender]);
             allowance[_from][msg.sender] -=_value;
             _transfer(_from,_to, _value);
+            return true;
             
         }
         function approve (address _spender, uint256 _value) onlyOwner public
@@ -111,7 +113,8 @@ contract GPYX is owned{
         function burnFrom(address _from, uint256 _value) onlyOwner public returns (bool success){
             
             require(balanceOf[_from] >= _value);
-            require(_value <= allowance[_from][msg.sender]);
+			
+	require(_value <= allowance[_from][msg.sender]);
             
             balanceOf[_from] -= _value;
             totalSupply -= _value;
@@ -120,7 +123,7 @@ contract GPYX is owned{
             return true;
         }
         
-        function freezeAccount (address target, bool freeze) onlyOwner {
+        function freezeAccount (address target, bool freeze)public onlyOwner {
             frozenAccount[target] = freeze;
             emit FrozenFunds (target, freeze);
             
